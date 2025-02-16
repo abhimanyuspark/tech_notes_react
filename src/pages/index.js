@@ -8,5 +8,16 @@ const Welcome = lazy(() => import("./__root/Welcome"));
 
 const UsersList = lazy(() => import("./__root/users/UsersList"));
 const NotesList = lazy(() => import("./__root/notes/NotesList"));
+const UserForm = lazy(() => import("./__root/users/UserForm"));
+const NoteForm = lazy(() => import("./__root/notes/NoteForm"));
 
-export { Home, Login, NotFound, Welcome, UsersList, NotesList };
+export {
+  Home,
+  Login,
+  NotFound,
+  Welcome,
+  UsersList,
+  NotesList,
+  UserForm,
+  NoteForm,
+};
