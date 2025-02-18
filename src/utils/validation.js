@@ -2,18 +2,25 @@ export const validation = (data) => {
   const errors = {};
 
   // Check if email is provided and valid
-  if (data.hasOwnProperty("email")) {
-    if (!data.email.trim()) {
-      errors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(data.email)) {
-      errors.email = "Email is invalid";
-    }
-  }
+  // if (data.hasOwnProperty("email")) {
+  //   if (!data.email.trim()) {
+  //     errors.email = "Email is required";
+  //   } else if (!/\S+@\S+\.\S+/.test(data.email)) {
+  //     errors.email = "Email is invalid";
+  //   }
+  // }
 
   // Check if title is provided
   if (data.hasOwnProperty("title")) {
     if (!data.title.trim()) {
       errors.title = "Title is required";
+    }
+  }
+
+  // Check if text is provided
+  if (data.hasOwnProperty("text")) {
+    if (!data.text.trim()) {
+      errors.text = "Text is required";
     }
   }
 

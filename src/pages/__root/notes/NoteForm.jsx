@@ -5,6 +5,11 @@ import { getSelectedNote, getUsers } from "../../../redux/server/server";
 import { useParams } from "react-router";
 import { validation } from "../../../utils/validation";
 
+const status = [
+  { name: "Complete", value: true },
+  { name: "In Complete", value: false },
+];
+
 const NoteForm = () => {
   const { id } = useParams();
   const { loading } = useSelector((state) => state.notes);
@@ -15,6 +20,7 @@ const NoteForm = () => {
     title: "",
     text: "",
     user: "",
+    completed: false,
   });
 
   const [formError, setFormError] = useState({
@@ -27,10 +33,10 @@ const NoteForm = () => {
     const { name, value } = event.target;
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: name === "completed" ? Boolean(value) : value,
     });
     setFormError({
-      ...formData,
+      ...formError,
       [name]: "",
     });
   };
@@ -64,7 +70,7 @@ const NoteForm = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      {loading && <Loader />}
+      {loading && id ? <Loader /> : ""}
 
       <h2 className="text-2xl">{id ? "Update Note" : "New Note"}</h2>
       <form onSubmit={onSubmit} className="flex flex-col gap-2">
@@ -79,6 +85,7 @@ const NoteForm = () => {
           label="Text"
           name="text"
           value={formData.text}
+          error={formError.text}
           onChange={onChange}
         />
         {/* <InputSelect
@@ -95,7 +102,25 @@ const NoteForm = () => {
             <option value="--">--</option>
           )}
         </InputSelect> */}
-        <Button text="Submit" />
+
+        {id ? (
+          <InputSelect
+            name={"completed"}
+            label={"Status"}
+            value={formData.completed}
+            onChange={onChange}
+          >
+            {status.map((a, i) => (
+              <option key={i} value={a.value}>
+                {a.name}
+              </option>
+            ))}
+          </InputSelect>
+        ) : (
+          ""
+        )}
+
+        <Button text="Submit" type="submit" />
       </form>
     </div>
   );

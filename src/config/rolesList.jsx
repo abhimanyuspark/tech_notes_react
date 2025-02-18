@@ -1,1 +1,5 @@
-export const rolesOptions = ["Employee", "Manager", "Admin"];
+export const rolesOptions = {
+  Employee: "Employee",
+  Manager: "Manager",
+  Admin: "Admin",
+};

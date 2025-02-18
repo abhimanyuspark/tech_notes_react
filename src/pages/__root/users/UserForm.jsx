@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Input, Button, Loader } from "../../../components";
+import { Input, Button, Loader, InputSelect } from "../../../components";
 import { validation } from "../../../utils/validation";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { getSelectedUser } from "../../../redux/server/server";
+import { rolesOptions } from "../../../config/rolesList";
+
+const status = [
+  { name: "Active", value: true },
+  { name: "In Active", value: false },
+];
 
 const UserForm = () => {
   const { id } = useParams();
@@ -13,6 +19,8 @@ const UserForm = () => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
+    roles: ["Employee"],
+    active: true,
   });
 
   const [formError, setFormError] = useState({
@@ -26,7 +34,7 @@ const UserForm = () => {
     const { name, value } = event.target;
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: name === "active" ? Boolean(value) : value,
     });
     setFormError({
       ...formError,
@@ -59,7 +67,7 @@ const UserForm = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      {loading && <Loader />}
+      {loading && id ? <Loader /> : ""}
 
       <h2 className="text-2xl">{id ? "Update User" : "New user"}</h2>
 
@@ -85,7 +93,48 @@ const UserForm = () => {
           onChange={onChange}
         />
 
-        <Button text="Submit" />
+        <InputSelect
+          value={formData.roles}
+          name={"roles"}
+          label={"Roles"}
+          multiple
+          size={3}
+          onChange={(event) => {
+            const { value } = event.target;
+            setFormData({
+              ...formData,
+              roles: Array.from(
+                event.target.selectedOptions,
+                (option) => option.value
+              ),
+            });
+          }}
+        >
+          {Object.values(rolesOptions).map((r, i) => (
+            <option key={i} value={r}>
+              {r}
+            </option>
+          ))}
+        </InputSelect>
+
+        {id ? (
+          <InputSelect
+            name={"active"}
+            label={"Status"}
+            value={formData.active}
+            onChange={onChange}
+          >
+            {status.map((a, i) => (
+              <option key={i} value={a.value}>
+                {a.name}
+              </option>
+            ))}
+          </InputSelect>
+        ) : (
+          ""
+        )}
+
+        <Button text="Submit" type="submit" />
       </form>
     </div>
   );

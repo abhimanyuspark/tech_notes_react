@@ -16,7 +16,12 @@ const NotesList = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      <Button onClick={() => navigate("/dash/notes/new")} text="Add Note" />
+      <Button
+        onClick={() => {
+          navigate("/dash/notes/new");
+        }}
+        text="Add Note"
+      />
       <Table Columns={Columns} data={notes} loading={loading} />
     </div>
   );

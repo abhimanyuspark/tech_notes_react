@@ -1,5 +1,6 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router";
+import { TiHome } from "../assets/icons";
 
 const DashFooter = () => {
   return (
@@ -20,7 +21,7 @@ const HomeButton = () => {
   if (pathname !== "/dash") {
     return (
       <button className="p-2 hover:bg-gray-600 rounded-md" onClick={onClick}>
-        Home
+        <TiHome className="text-2xl cursor-pointer" />
       </button>
     );
   }

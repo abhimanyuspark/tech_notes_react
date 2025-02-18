@@ -8,6 +8,7 @@ import {
   FaAngleRight,
   FaEye,
   FaEyeSlash,
+  FaLongArrowAltRight,
 } from "react-icons/fa";
 import { BsThreeDotsVertical } from "react-icons/bs";
 
@@ -21,5 +22,6 @@ export {
   FaAngleRight,
   FaEye,
   FaEyeSlash,
+  FaLongArrowAltRight,
   BsThreeDotsVertical,
 };

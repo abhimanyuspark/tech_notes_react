@@ -12,7 +12,6 @@ const Input = ({
   error,
   show,
   setShow,
-  ...props
 }) => {
   return (
     <div className="relative flex gap-2 flex-col">
@@ -43,10 +42,7 @@ const Input = ({
             ? "outline-red-500 focus:outline-red-600"
             : "outline-gray-300 focus:outline-indigo-600"
         }`}
-        onChange={(e) => {
-          onChange(e);
-        }}
-        {...props}
+        onChange={onChange}
       />
 
       <p className="text-red-500 text-sm">{error}</p>
@@ -96,7 +92,16 @@ const CheckBox = ({
   );
 };
 
-const InputSelect = ({ value, onChange, children, label, name, error }) => {
+const InputSelect = ({
+  value,
+  onChange,
+  children,
+  label,
+  name,
+  error,
+  multiple,
+  size,
+}) => {
   return (
     <div className="flex gap-2 flex-col w-full">
       {label && (
@@ -106,6 +111,8 @@ const InputSelect = ({ value, onChange, children, label, name, error }) => {
       )}
       <select
         id={name}
+        multiple={multiple}
+        size={size}
         name={name}
         value={value}
         onChange={onChange}
