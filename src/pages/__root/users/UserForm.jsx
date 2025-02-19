@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Input, Button, Loader, InputSelect } from "../../../components";
 import { validation } from "../../../utils/validation";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { getSelectedUser } from "../../../redux/server/server";
+import {
+  getSelectedUser,
+  postUser,
+  updateUser,
+} from "../../../redux/server/server";
 import { rolesOptions } from "../../../config/rolesList";
+import { toast } from "react-toastify";
+import { randomPWD } from "../../../utils/randomPWD";
 
 const status = [
   { name: "Active", value: true },
@@ -14,6 +20,7 @@ const status = [
 const UserForm = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { loading } = useSelector((state) => state.users);
 
   const [formData, setFormData] = useState({
@@ -34,7 +41,7 @@ const UserForm = () => {
     const { name, value } = event.target;
     setFormData({
       ...formData,
-      [name]: name === "active" ? Boolean(value) : value,
+      [name]: name === "active" ? value === "true" : value,
     });
     setFormError({
       ...formError,
@@ -42,24 +49,40 @@ const UserForm = () => {
     });
   };
 
-  const onSubmit = (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault();
     const validate = validation(formData);
     const isValid = Object.values(validate).length === 0;
+    const obj = {
+      pending: "Promise is pending",
+      success: "Promise resolved 👌",
+      error: "Promise rejected 🤯",
+    };
 
     if (isValid) {
-      alert(JSON.stringify(formData));
+      if (id) {
+        await toast.promise(
+          dispatch(updateUser({ ...formData, id: formData?._id })),
+          obj
+        );
+      } else {
+        await toast.promise(dispatch(postUser(formData)), obj);
+      }
+      navigate(-1, { replace: true });
     } else {
       setFormError(validate);
     }
   };
 
   useEffect(() => {
-    if (id) {
+    if (id !== undefined) {
       const fetchData = async () => {
         const res = await dispatch(getSelectedUser(id));
-        const data = res?.payload;
-        setFormData(data);
+        const data = res?.payload || {}; // Ensure it's always an object
+        setFormData((prev) => ({
+          ...prev,
+          ...data,
+        }));
       };
       fetchData();
     }
@@ -81,6 +104,7 @@ const UserForm = () => {
         />
 
         <Input
+          random
           label="Password"
           name="password"
           type={show ? "text" : "password"}
@@ -91,6 +115,11 @@ const UserForm = () => {
           value={formData.password}
           error={formError.password}
           onChange={onChange}
+          onRandom={() => {
+            const password = randomPWD(10);
+            setFormData((p) => ({ ...p, password: password }));
+            setFormError((p) => ({ ...p, password: "" }));
+          }}
         />
 
         <InputSelect

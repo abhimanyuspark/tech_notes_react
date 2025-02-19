@@ -1,6 +1,9 @@
 import { useDispatch } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router";
 import { Menu } from "../../../components";
+import { FaEdit, FaTrash } from "../../../assets/icons";
+import { deleteNote } from "../../../redux/server/server";
+import { toast } from "react-toastify";
 
 export const Columns = [
   {
@@ -68,7 +71,16 @@ export const Columns = [
     header: () => "Completed",
     cell: (info) => {
       const value = info.getValue();
-      return <span>{value ? "Completed" : "In Progress"}</span>;
+      return (
+        <div className="w-52 text-md flex items-center gap-4">
+          <span
+            className={`${
+              value ? "bg-green-600" : "bg-red-600"
+            } size-2 rounded-full`}
+          ></span>
+          <span>{value ? "Completed" : "In Progress"}</span>
+        </div>
+      );
     },
     sortDescFirst: false,
   },
@@ -95,11 +107,26 @@ export const Columns = [
         <div className="flex items-center justify-end">
           <Menu>
             <li
+              className="hover:bg-green-600"
               onClick={() => {
                 navigate(`/dash/notes/edit/${_id}`);
               }}
             >
+              <FaEdit />
               Edit
+            </li>
+            <li
+              className="hover:bg-red-600"
+              onClick={() => {
+                toast.promise(dispatch(deleteNote(_id)), {
+                  pending: "Promise is pending",
+                  success: "Promise resolved 👌",
+                  error: "Promise rejected 🤯",
+                });
+              }}
+            >
+              <FaTrash />
+              Delete
             </li>
           </Menu>
         </div>

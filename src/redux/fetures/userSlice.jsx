@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getUsers, getSelectedUser } from "../server/server";
+import { getUsers, getSelectedUser, deleteUser } from "../server/server";
 
 const initialState = {
   users: [],
@@ -14,7 +14,7 @@ const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getUsers.pending, (state, action) => {
+      .addCase(getUsers.pending, (state) => {
         state.loading = true;
       })
       .addCase(getUsers.fulfilled, (state, action) => {
@@ -23,9 +23,10 @@ const userSlice = createSlice({
       })
       .addCase(getUsers.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
-      .addCase(getSelectedUser.pending, (state, action) => {
+
+      .addCase(getSelectedUser.pending, (state) => {
         state.loading = true;
       })
       .addCase(getSelectedUser.fulfilled, (state, action) => {
@@ -33,6 +34,15 @@ const userSlice = createSlice({
         state.selectedUser = action.payload;
       })
       .addCase(getSelectedUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.users = state.users.filter((u) => u._id !== action.payload);
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

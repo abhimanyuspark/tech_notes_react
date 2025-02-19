@@ -19,7 +19,7 @@ const Menu = ({ children }) => {
         <BsThreeDotsVertical />
       </div>
       {open && (
-        <ul className="absolute rounded-sm top-10 z-10 right-0 w-50 h-auto px-2 *:cursor-pointer *:p-2 bg-blue-900">
+        <ul className="shadow absolute rounded-sm top-10 z-10 right-0 w-50 h-auto py-2 *:cursor-pointer *:py-2 *:px-4 bg-blue-950  *:flex *:items-center *:gap-4 ">
           {children}
         </ul>
       )}

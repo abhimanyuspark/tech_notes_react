@@ -1,20 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { Button, Input, InputSelect, Loader } from "../../../components";
 import { useDispatch, useSelector } from "react-redux";
-import { getSelectedNote, getUsers } from "../../../redux/server/server";
-import { useParams } from "react-router";
+import {
+  getSelectedNote,
+  postNote,
+  updateNote,
+} from "../../../redux/server/server";
+import { useNavigate, useParams } from "react-router";
 import { validation } from "../../../utils/validation";
+import { toast } from "react-toastify";
 
 const status = [
-  { name: "Complete", value: true },
-  { name: "In Complete", value: false },
+  { name: "Completed", value: true },
+  { name: "In Progress", value: false },
 ];
 
 const NoteForm = () => {
   const { id } = useParams();
   const { loading } = useSelector((state) => state.notes);
-  // const { users, loading } = useSelector((state) => state.users);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -33,7 +38,7 @@ const NoteForm = () => {
     const { name, value } = event.target;
     setFormData({
       ...formData,
-      [name]: name === "completed" ? Boolean(value) : value,
+      [name]: name === "completed" ? value === "true" : value,
     });
     setFormError({
       ...formError,
@@ -41,29 +46,41 @@ const NoteForm = () => {
     });
   };
 
-  const onSubmit = (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault();
     const validate = validation(formData);
     const isValid = Object.values(validate).length === 0;
-
+    const obj = {
+      pending: "Promise is pending",
+      success: "Promise resolved 👌",
+      error: "Promise rejected 🤯",
+    };
     if (isValid) {
-      alert(JSON.stringify(formData));
+      if (id) {
+        await toast.promise(
+          dispatch(updateNote({ ...formData, id: formData?._id })),
+          obj
+        );
+      } else {
+        await toast.promise(dispatch(postNote(formData)), obj);
+      }
+      navigate(-1, { replace: true });
     } else {
       setFormError(validate);
     }
   };
 
-  // useEffect(() => {
-  //   dispatch(getUsers());
-  // }, [dispatch]);
-
   useEffect(() => {
-    if (id) {
+    if (id !== undefined) {
       const fetchData = async () => {
         const res = await dispatch(getSelectedNote(id));
-        const data = res?.payload;
-        setFormData(data);
+        const data = res?.payload || {}; // Ensure it's always an object
+        setFormData((prev) => ({
+          ...prev,
+          ...data,
+        }));
       };
+
       fetchData();
     }
   }, [id, dispatch]);
@@ -88,20 +105,6 @@ const NoteForm = () => {
           error={formError.text}
           onChange={onChange}
         />
-        {/* <InputSelect
-          name="user"
-          label="Users"
-          value={formData.user}
-          onChange={onChange}
-        >
-          {loading ? (
-            <option disabled={true}>Loading...</option>
-          ) : users?.length > 0 ? (
-            users?.map((u) => <option value={u._id}>{u?.username}</option>)
-          ) : (
-            <option value="--">--</option>
-          )}
-        </InputSelect> */}
 
         {id ? (
           <InputSelect

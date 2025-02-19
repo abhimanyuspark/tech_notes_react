@@ -12,4 +12,16 @@ const Button = ({ text, onClick, type = "button" }) => {
   );
 };
 
-export { Button };
+const CancelButton = ({ text, onClick, type = "button" }) => {
+  return (
+    <button
+      type={type}
+      onClick={onClick}
+      className="p-2 min-w-full rounded-md text-white font-semibold hover:bg-black cursor-pointer"
+    >
+      {text}
+    </button>
+  );
+};
+
+export { Button, CancelButton };

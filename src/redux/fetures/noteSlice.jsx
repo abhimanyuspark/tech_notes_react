@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getNotes, getSelectedNote } from "../server/server";
+import { deleteNote, getNotes, getSelectedNote } from "../server/server";
 
 const initialState = {
   notes: [],
@@ -14,7 +14,7 @@ const noteSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getNotes.pending, (state, action) => {
+      .addCase(getNotes.pending, (state) => {
         state.loading = true;
       })
       .addCase(getNotes.fulfilled, (state, action) => {
@@ -23,9 +23,10 @@ const noteSlice = createSlice({
       })
       .addCase(getNotes.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
-      .addCase(getSelectedNote.pending, (state, action) => {
+
+      .addCase(getSelectedNote.pending, (state) => {
         state.loading = true;
       })
       .addCase(getSelectedNote.fulfilled, (state, action) => {
@@ -34,7 +35,12 @@ const noteSlice = createSlice({
       })
       .addCase(getSelectedNote.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
+      })
+
+      .addCase(deleteNote.fulfilled, (state, action) => {
+        state.loading = false;
+        state.notes = state.notes.filter((n) => n._id !== action.payload);
       });
   },
 });

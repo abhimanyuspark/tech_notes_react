@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { FaEye, FaEyeSlash } from "../assets/icons";
+import { FaEye, FaEyeSlash, FaRandom } from "../assets/icons";
 
 const Input = ({
   type = "text",
@@ -7,17 +7,33 @@ const Input = ({
   value,
   onChange,
   placeholder,
-  className,
+  random = false,
+  autoComplete = "off",
   label,
   error,
   show,
   setShow,
+  onRandom,
 }) => {
   return (
     <div className="relative flex gap-2 flex-col">
       <label htmlFor={name} className="text-sm/6 font-medium text-gray-100">
         {label}
       </label>
+
+      {random && (
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+            onRandom();
+          }}
+          aria-hidden="true"
+          className="absolute text-xl top-[40px] right-10 cursor-pointer"
+        >
+          <FaRandom />
+        </div>
+      )}
+
       {name === "password" && (
         <div
           onClick={(e) => {
@@ -25,7 +41,7 @@ const Input = ({
             setShow();
           }}
           aria-hidden="true"
-          className="absolute text-xl top-[40px] right-2"
+          className="absolute text-xl top-[40px] right-2 cursor-pointer"
         >
           {show ? <FaEye /> : <FaEyeSlash />}
         </div>
@@ -34,6 +50,7 @@ const Input = ({
       <input
         id={name}
         name={name}
+        autoComplete={autoComplete}
         type={type}
         value={value}
         placeholder={placeholder}
@@ -99,7 +116,7 @@ const InputSelect = ({
   label,
   name,
   error,
-  multiple,
+  multiple = false,
   size,
 }) => {
   return (
