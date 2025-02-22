@@ -5,7 +5,7 @@ const Button = ({ text, onClick, type = "button" }) => {
     <button
       type={type}
       onClick={onClick}
-      className="p-2 min-w-full rounded-md text-black font-semibold bg-white cursor-pointer"
+      className="py-2 px-4 w-auto rounded-md text-black font-semibold bg-white cursor-pointer"
     >
       {text}
     </button>
@@ -17,7 +17,7 @@ const CancelButton = ({ text, onClick, type = "button" }) => {
     <button
       type={type}
       onClick={onClick}
-      className="p-2 min-w-full rounded-md text-white font-semibold hover:bg-black cursor-pointer"
+      className="py-2 px-4 w-auto rounded-md text-white font-semibold hover:bg-black cursor-pointer"
     >
       {text}
     </button>

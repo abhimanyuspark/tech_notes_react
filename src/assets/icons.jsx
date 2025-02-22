@@ -1,4 +1,5 @@
 import { TiHome } from "react-icons/ti";
+import { LuLogOut } from "react-icons/lu";
 import {
   FaLongArrowAltDown,
   FaLongArrowAltUp,
@@ -30,4 +31,5 @@ export {
   FaEyeSlash,
   FaLongArrowAltRight,
   BsThreeDotsVertical,
+  LuLogOut,
 };

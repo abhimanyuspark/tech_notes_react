@@ -22,6 +22,24 @@ body {
   min-height: 100vh;
 }
 
+header,
+footer {
+  width: 100%;
+  z-index: 100;
+  left: 0;
+  background: var(--bg-primary);
+}
+
+header {
+  position: sticky;
+  top: 0;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+}
+
 .loader {
   width: 50px;
   aspect-ratio: 1;

@@ -20,8 +20,8 @@ const HomeButton = () => {
 
   if (pathname !== "/dash") {
     return (
-      <button className="p-2 hover:bg-gray-600 rounded-md" onClick={onClick}>
-        <TiHome className="text-2xl cursor-pointer" />
+      <button className="p-1 hover:bg-gray-600 rounded-md" onClick={onClick}>
+        <TiHome className="text-xl cursor-pointer" />
       </button>
     );
   }

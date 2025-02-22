@@ -5,9 +5,9 @@ import DashHeader from "./DashHeader";
 
 const DashLayout = () => {
   return (
-    <div className="flex flex-col">
+    <div>
       <DashHeader />
-      <div className="p-4 flex-1">
+      <div className="p-4 pb-10">
         <Outlet />
       </div>
       <DashFooter />

@@ -11,6 +11,7 @@ import {
 import { rolesOptions } from "../../../config/rolesList";
 import { toast } from "react-toastify";
 import { randomPWD } from "../../../utils/randomPWD";
+import { CancelButton } from "../../../components/Buttons";
 
 const status = [
   { name: "Active", value: true },
@@ -163,7 +164,15 @@ const UserForm = () => {
           ""
         )}
 
-        <Button text="Submit" type="submit" />
+        <div>
+          <Button text="Submit" type="submit" />
+          <CancelButton
+            text="Cancel"
+            onClick={() => {
+              navigate(-1, { replace: true });
+            }}
+          />
+        </div>
       </form>
     </div>
   );
