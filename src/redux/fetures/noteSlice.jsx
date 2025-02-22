@@ -79,7 +79,7 @@ export const updateNote = createAsyncThunk(
   async (data, { getState, rejectWithValue }) => {
     try {
       const token = getState().auth.token;
-      const res = await api.put(`/notes/${data.id}`, data, {
+      const res = await api.put(`/notes`, data, {
         headers: { Authorization: `Bearer ${token}` },
       });
       return res.data;

@@ -52,7 +52,14 @@ const UserForm = () => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    const validate = validation(formData);
+    let validate = validation(formData);
+
+    // Skip password validation if id is defined
+    if (id) {
+      const { password, ...rest } = validate;
+      validate = rest;
+    }
+
     const isValid = Object.values(validate).length === 0;
     const obj = {
       pending: "Promise is pending",

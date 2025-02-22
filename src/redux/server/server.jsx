@@ -13,9 +13,12 @@ api.interceptors.response.use(
     const originalRequest = error.config;
 
     if (
-      (error.response?.status === 401 && !originalRequest._retry) ||
-      originalRequest.url === "/users" ||
-      originalRequest.url === "/notes"
+      (error.response?.status === 401 &&
+        !originalRequest._retry &&
+        originalRequest.url === "/users" &&
+        originalRequest.url.includes("users")) ||
+      (originalRequest.url === "/notes" &&
+        originalRequest.url.includes("notes"))
     ) {
       originalRequest._retry = true;
 
