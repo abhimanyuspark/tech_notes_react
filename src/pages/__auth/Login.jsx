@@ -4,7 +4,7 @@ import { validation } from "../../utils/validation";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Input, Loader } from "../../components";
-import { loginAuth } from "../../redux/server/server";
+import { loginAuth } from "../../redux/fetures/authSlice";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -12,8 +12,8 @@ const Login = () => {
   const { loading } = useSelector((state) => state.auth);
 
   const [formData, setFormData] = useState({
-    username: "",
-    password: "",
+    username: "Abhi3103",
+    password: "abhi3103",
   });
 
   const [formError, setFormError] = useState({

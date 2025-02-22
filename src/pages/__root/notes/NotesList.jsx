@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Columns } from "./Column";
 import { useDispatch, useSelector } from "react-redux";
-import { getNotes } from "../../../redux/server/server";
+import { getNotes } from "../../../redux/fetures/noteSlice";
 import { Button, Table } from "../../../components";
 import { useNavigate } from "react-router";
 

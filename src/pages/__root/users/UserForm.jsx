@@ -7,7 +7,7 @@ import {
   getSelectedUser,
   postUser,
   updateUser,
-} from "../../../redux/server/server";
+} from "../../../redux/fetures/userSlice";
 import { rolesOptions } from "../../../config/rolesList";
 import { toast } from "react-toastify";
 import { randomPWD } from "../../../utils/randomPWD";

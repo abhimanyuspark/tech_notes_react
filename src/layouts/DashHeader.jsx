@@ -3,7 +3,7 @@ import { NavLink } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
-import { logOutAuth } from "../redux/server/server";
+import { logOutAuth } from "../redux/fetures/authSlice";
 import { LuLogOut } from "../assets/icons";
 
 const DashHeader = () => {

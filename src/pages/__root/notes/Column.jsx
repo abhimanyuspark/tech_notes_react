@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router";
 import { Menu } from "../../../components";
 import { FaEdit, FaTrash } from "../../../assets/icons";
-import { deleteNote } from "../../../redux/server/server";
+import { deleteNote } from "../../../redux/fetures/noteSlice";
 import { toast } from "react-toastify";
 
 export const Columns = [

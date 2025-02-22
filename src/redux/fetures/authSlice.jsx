@@ -1,5 +1,50 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { loginAuth, logOutAuth, refreshAuth } from "../server/server";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+const url = "http://localhost:3000";
+
+export const loginAuth = createAsyncThunk(
+  "auth/login",
+  async (data, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(`${url}/auth`, data, {
+        withCredentials: true, // ✅ Ensure cookies are stored
+      });
+
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || "Login failed");
+    }
+  }
+);
+
+export const refreshAuth = createAsyncThunk(
+  "auth/refresh",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axios.get(`${url}/auth/refresh`, {
+        withCredentials: true, // ✅ Ensure cookies are included
+      });
+
+      return res.data; // Expecting { accessToken: "newToken" }
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to refresh token"
+      );
+    }
+  }
+);
+
+export const logOutAuth = createAsyncThunk(
+  "auth/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(`${url}/auth/logout`);
+      return res.data;
+    } catch (error) {
+      rejectWithValue(error);
+    }
+  }
+);
 
 const initialState = {
   // auth: {},

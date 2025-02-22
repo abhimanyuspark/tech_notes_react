@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Button, Table } from "../../../components";
 import { useDispatch, useSelector } from "react-redux";
-import { getUsers } from "../../../redux/server/server";
+import { getUsers } from "../../../redux/fetures/userSlice";
 import { Columns } from "./Column";
 import { useNavigate } from "react-router";
 

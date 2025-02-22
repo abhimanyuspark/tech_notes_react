@@ -5,7 +5,7 @@ import {
   getSelectedNote,
   postNote,
   updateNote,
-} from "../../../redux/server/server";
+} from "../../../redux/fetures/noteSlice";
 import { useNavigate, useParams } from "react-router";
 import { validation } from "../../../utils/validation";
 import { toast } from "react-toastify";

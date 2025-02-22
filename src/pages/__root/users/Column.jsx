@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router";
 import { Menu } from "../../../components";
 import { FaEdit, FaTrash } from "../../../assets/icons";
 import { toast } from "react-toastify";
-import { deleteUser } from "../../../redux/server/server";
+import { deleteUser } from "../../../redux/fetures/userSlice";
 
 export const Columns = [
   {
