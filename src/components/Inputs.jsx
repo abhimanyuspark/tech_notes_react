@@ -120,7 +120,7 @@ const InputSelect = ({
   size,
 }) => {
   return (
-    <div className="flex gap-2 flex-col w-full">
+    <div className="flex gap-2 flex-col min-w-auto max-w-full">
       {label && (
         <label htmlFor={name} className="text-sm cursor-pointer flex gap-1">
           {label}

@@ -14,11 +14,11 @@ const Home = () => {
         <p className="text-gray-300 text-center">
           We provide top-notch computer repair services and technical support.
         </p>
-        <address>
+        <address className="flex flex-col gap-2">
           <h2 className="text-xl font-semibold text-gray-100">Address</h2>
           <p className="text-gray-300">123 Tech Street, Silicon Valley, CA</p>
         </address>
-        <div>
+        <div className="flex flex-col gap-2">
           <h2 className="text-xl font-semibold text-gray-100">Cool Features</h2>
           <ul className="list-disc list-inside text-gray-300 ml-4">
             <li>Expert Technicians</li>

@@ -2,8 +2,10 @@ import axios from "axios";
 import { refreshAuth } from "../fetures/authSlice"; // Import refresh token action
 import { store } from "../store"; // Import Redux store
 
+const url = import.meta.env.VITE_API_URL;
+
 const api = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: url,
 });
 
 // Add an interceptor to refresh token if the request fails due to `401 Unauthorized`
@@ -15,17 +17,15 @@ api.interceptors.response.use(
     if (
       (error.response?.status === 401 &&
         !originalRequest._retry &&
-        originalRequest.url === "/users" &&
-        originalRequest.url.includes("users")) ||
-      (originalRequest.url === "/notes" &&
-        originalRequest.url.includes("notes"))
+        originalRequest.url === "/users") ||
+      originalRequest.url === "/notes"
     ) {
       originalRequest._retry = true;
 
       try {
         // Call refresh API using Redux action
         const res = await store.dispatch(refreshAuth()).unwrap();
-        console.log(res);
+
         // Update token in Redux state
         const newToken = res.accessToken;
 

@@ -146,7 +146,7 @@ const Table = ({
         </tbody>
         <tfoot>
           <tr>
-            <td className="p-2">
+            <td className="py-8 px-2">
               <CheckBox
                 checked={table.getIsAllPageRowsSelected()}
                 indeterminate={table.getIsSomePageRowsSelected()}
@@ -159,10 +159,10 @@ const Table = ({
           </tr>
 
           <tr>
-            <td colSpan={columnSpan} className="p-2">
-              <div className="flex justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="flex gap-2 items-center">
+            <td colSpan={columnSpan} className="py-8 px-2">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-4 sm:flex-row flex-col">
+                  <div className="flex gap-2 flex-wrap items-center">
                     <label>
                       Page {table.getState().pagination.pageIndex + 1} of{" "}
                       {table.getPageCount()} | Go to page :
@@ -182,7 +182,7 @@ const Table = ({
                     </InputSelect>
                   </div>
 
-                  <div className="flex gap-2 items-center">
+                  <div className="flex gap-2 flex-wrap items-center">
                     <label>Show : </label>
                     <InputSelect
                       value={table.getState().pagination.pageSize}
