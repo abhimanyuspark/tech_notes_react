@@ -3,8 +3,9 @@ import { toast } from "react-toastify";
 import { validation } from "../../utils/validation";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Input, Loader } from "../../components";
+import { Button, CheckBox, Input, Loader } from "../../components";
 import { loginAuth } from "../../redux/fetures/authSlice";
+import { useLocalStorage } from "../../hooks";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -12,7 +13,7 @@ const Login = () => {
   const { loading } = useSelector((state) => state.auth);
 
   const [formData, setFormData] = useState({
-    username: "Abhi3103",
+    username: "Abhimanyu3103",
     password: "abhi3103",
   });
 
@@ -22,6 +23,7 @@ const Login = () => {
   });
 
   const [show, setShow] = useState(false);
+  const [persist, setPersist] = useLocalStorage("persist", false);
 
   const onChange = (event) => {
     const { name, value } = event.target;
@@ -65,35 +67,49 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      {loading ? <Loader /> : ""}
+    <div className="flex items-center justify-center h-screen">
+      <div className="flex flex-col gap-4 p-8 sm:p-0 w-full sm:w-100">
+        {loading ? <Loader /> : ""}
 
-      <h2 className="text-2xl">Login User</h2>
+        <h2 className="text-3xl text-center p-4">Login</h2>
 
-      <form onSubmit={onSubmit} className="flex flex-col gap-2">
-        <Input
-          label="Username"
-          name="username"
-          value={formData.username}
-          error={formError.username}
-          onChange={onChange}
-        />
+        <form onSubmit={onSubmit} className="flex flex-col gap-2">
+          <Input
+            important
+            label="Username"
+            name="username"
+            value={formData.username}
+            error={formError.username}
+            onChange={onChange}
+          />
 
-        <Input
-          label="Password"
-          name="password"
-          type={show ? "text" : "password"}
-          show={show}
-          setShow={() => {
-            setShow(!show);
-          }}
-          value={formData.password}
-          error={formError.password}
-          onChange={onChange}
-        />
+          <Input
+            important
+            label="Password"
+            name="password"
+            type={show ? "text" : "password"}
+            show={show}
+            setShow={() => {
+              setShow(!show);
+            }}
+            value={formData.password}
+            error={formError.password}
+            onChange={onChange}
+          />
 
-        <Button text="Submit" type="submit" />
-      </form>
+          <CheckBox
+            label="Remember Me"
+            name="persist"
+            className="py-2"
+            checked={persist}
+            onChange={() => {
+              setPersist(!persist);
+            }}
+          />
+
+          <Button text="Submit" type="submit" />
+        </form>
+      </div>
     </div>
   );
 };

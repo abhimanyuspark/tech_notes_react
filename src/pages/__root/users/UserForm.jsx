@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Input, Button, Loader, InputSelect } from "../../../components";
+import {
+  Input,
+  Button,
+  Loader,
+  InputSelect,
+  CancelButton,
+} from "../../../components";
 import { validation } from "../../../utils/validation";
 import { useNavigate, useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,7 +17,6 @@ import {
 import { rolesOptions } from "../../../config/rolesList";
 import { toast } from "react-toastify";
 import { randomPWD } from "../../../utils/randomPWD";
-import { CancelButton } from "../../../components/Buttons";
 
 const status = [
   { name: "Active", value: true },
@@ -171,7 +176,7 @@ const UserForm = () => {
           ""
         )}
 
-        <div>
+        <div className="flex gap-2 items-center">
           <Button text="Submit" type="submit" />
           <CancelButton
             text="Cancel"

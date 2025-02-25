@@ -38,14 +38,14 @@ export const Columns = [
       );
     },
   },
-  {
-    accessorKey: "text",
-    header: () => "Text",
-    cell: (info) => {
-      const value = info.getValue();
-      return <div className="text-sm">{value}</div>;
-    },
-  },
+  // {
+  //   accessorKey: "text",
+  //   header: () => "Text",
+  //   cell: (info) => {
+  //     const value = info.getValue();
+  //     return <div className="text-sm">{value}</div>;
+  //   },
+  // },
   {
     accessorKey: "createdAt",
     header: () => "CreatedAt",

@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Button, Input, InputSelect, Loader } from "../../../components";
+import {
+  Button,
+  Input,
+  InputSelect,
+  Loader,
+  CancelButton,
+} from "../../../components";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getSelectedNote,
@@ -123,7 +129,15 @@ const NoteForm = () => {
           ""
         )}
 
-        <Button text="Submit" type="submit" />
+        <div className="flex gap-2 items-center">
+          <Button text="Submit" type="submit" />
+          <CancelButton
+            text="Cancel"
+            onClick={() => {
+              navigate(-1, { replace: true });
+            }}
+          />
+        </div>
       </form>
     </div>
   );

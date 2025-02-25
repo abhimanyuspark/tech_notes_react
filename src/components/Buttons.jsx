@@ -17,7 +17,7 @@ const CancelButton = ({ text, onClick, type = "button" }) => {
     <button
       type={type}
       onClick={onClick}
-      className="py-2 px-4 w-auto rounded-md text-white font-semibold hover:bg-black cursor-pointer"
+      className="py-2 px-4 w-auto rounded-md text-white font-semibold hover:text-black hover:bg-white cursor-pointer"
     >
       {text}
     </button>

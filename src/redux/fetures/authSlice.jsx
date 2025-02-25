@@ -8,7 +8,7 @@ export const loginAuth = createAsyncThunk(
   async (data, { rejectWithValue }) => {
     try {
       const res = await axios.post(`${url}/auth`, data, {
-        withCredentials: true, // ✅ Ensure cookies are stored
+        withCredentials: true,
       });
 
       return res.data;
@@ -23,10 +23,10 @@ export const refreshAuth = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const res = await axios.get(`${url}/auth/refresh`, {
-        withCredentials: true, // ✅ Ensure cookies are included
+        withCredentials: true,
       });
 
-      return res.data; // Expecting { accessToken: "newToken" }
+      return res.data;
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Failed to refresh token"
@@ -40,7 +40,7 @@ export const logOutAuth = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const res = await axios.post(`${url}/auth/logout`);
-      return res.data;
+      return res?.data;
     } catch (error) {
       rejectWithValue(error);
     }
@@ -101,7 +101,7 @@ const authSlice = createSlice({
       })
       .addCase(logOutAuth.fulfilled, (state, action) => {
         state.loading = false;
-        state.token = null;
+        state.token = action?.payload || null;
       })
       .addCase(logOutAuth.rejected, (state, action) => {
         state.loading = false;

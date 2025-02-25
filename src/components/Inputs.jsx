@@ -1,6 +1,18 @@
 import React, { useEffect, useRef } from "react";
 import { FaEye, FaEyeSlash, FaRandom } from "../assets/icons";
 
+const Label = ({ name, label, important }) => {
+  return (
+    <label
+      htmlFor={name}
+      className="text-sm/6 font-medium text-gray-100 cursor-pointer flex gap-2"
+    >
+      {label}
+      {important && <sup className="text-red-500 text-base static">*</sup>}
+    </label>
+  );
+};
+
 const Input = ({
   type = "text",
   name,
@@ -14,12 +26,11 @@ const Input = ({
   show,
   setShow,
   onRandom,
+  important,
 }) => {
   return (
     <div className="relative flex gap-2 flex-col">
-      <label htmlFor={name} className="text-sm/6 font-medium text-gray-100">
-        {label}
-      </label>
+      {label && <Label label={label} name={name} important={important} />}
 
       {random && (
         <div
@@ -86,7 +97,7 @@ const CheckBox = ({
   }, [ref, indeterminate]);
 
   return (
-    <div className="flex gap-2 items-center">
+    <div className={className + " flex gap-2 items-center"}>
       <input
         type="checkbox"
         id={name}
@@ -94,17 +105,9 @@ const CheckBox = ({
         checked={checked}
         onChange={onChange}
         disabled={disabled}
-        className={className + " w-4 h-4 aspect-square"}
+        className={"w-4 h-4 aspect-square bg-white accent-white"}
       />
-      {label && (
-        <label
-          htmlFor={name}
-          className="text-slate-600 text-sm cursor-pointer flex gap-1"
-        >
-          {label}
-          {important && <sup className="text-red-500 text-base static">*</sup>}
-        </label>
-      )}
+      {label && <Label label={label} name={name} important={important} />}
     </div>
   );
 };
@@ -118,14 +121,11 @@ const InputSelect = ({
   error,
   multiple = false,
   size,
+  important,
 }) => {
   return (
     <div className="flex gap-2 flex-col min-w-auto max-w-full">
-      {label && (
-        <label htmlFor={name} className="text-sm cursor-pointer flex gap-1">
-          {label}
-        </label>
-      )}
+      {label && <Label important={important} label={label} name={name} />}
       <select
         id={name}
         multiple={multiple}
