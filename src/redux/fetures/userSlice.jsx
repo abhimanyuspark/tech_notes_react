@@ -73,6 +73,27 @@ export const deleteUser = createAsyncThunk(
   }
 );
 
+export const deleteSelectedUsers = createAsyncThunk(
+  "deleteSelectedOnes/user",
+  async (ids, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().auth.token;
+      await api.delete("/users/delete_multiple", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        data: { ids }, // Important: DELETE requests in Axios need `data`
+      });
+      return ids;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to delete user"
+      );
+    }
+  }
+);
+
 // Update a user
 export const updateUser = createAsyncThunk(
   "update/user",
@@ -133,6 +154,17 @@ const userSlice = createSlice({
         state.users = state.users.filter((u) => u._id !== action.payload);
       })
       .addCase(deleteUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      .addCase(deleteSelectedUsers.fulfilled, (state, action) => {
+        state.loading = false;
+        state.users = state.users.filter(
+          (u) => !action.payload.includes(u._id)
+        );
+      })
+      .addCase(deleteSelectedUsers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

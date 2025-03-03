@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useLocalStorage } from "../hooks";
 import { useDispatch, useSelector } from "react-redux";
-import { Outlet, Navigate } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 import { refreshAuth } from "../redux/fetures/authSlice";
-import { Loader } from "../components";
+import { Button, Loader } from "../components";
 
 const Persist = () => {
   const dispatch = useDispatch();
@@ -14,12 +14,12 @@ const Persist = () => {
 
   useEffect(() => {
     const verifyRefreshToken = async () => {
-      console.log("verifying refresh token");
       try {
         //const response =
         await dispatch(refreshAuth());
         //const { accessToken } = response.data
         setTrueSuccess(true);
+        console.log("[persist] verifying refresh token.");
       } catch (err) {
         console.error(err);
       }
@@ -36,12 +36,7 @@ const Persist = () => {
   } else if (loading) {
     content = <Loader />;
   } else if (error) {
-    content = (
-      <Navigate
-        to="/login"
-        state={{ message: "Your session has expired. Please login again." }}
-      />
-    );
+    content = <Login />;
   } else if (token && trueSuccess) {
     content = <Outlet />;
   } else if (token && persist) {
@@ -51,4 +46,18 @@ const Persist = () => {
   return content;
 };
 
+const Login = () => {
+  const navigate = useNavigate();
+  return (
+    <div className="flex flex-col items-center justify-center gap-4 h-screen">
+      <h1 className="text-2xl font-bold">Please login to continue</h1>
+      <Button
+        text="Login"
+        onClick={() => {
+          navigate("/login");
+        }}
+      />
+    </div>
+  );
+};
 export default Persist;

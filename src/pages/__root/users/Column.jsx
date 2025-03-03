@@ -1,11 +1,35 @@
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router";
-import { Menu } from "../../../components";
+import { CheckBox, Menu } from "../../../components";
 import { FaEdit, FaTrash } from "../../../assets/icons";
 import { toast } from "react-toastify";
 import { deleteUser } from "../../../redux/fetures/userSlice";
+import { userToastDelete } from "../../../config/toastParams";
 
 export const Columns = [
+  {
+    id: "select",
+    enableSorting: false,
+    header: ({ table }) => {
+      return (
+        <CheckBox
+          checked={table.getIsAllRowsSelected()}
+          indeterminate={table.getIsSomeRowsSelected()}
+          onChange={table.getToggleAllRowsSelectedHandler()}
+        />
+      );
+    },
+    cell: ({ row }) => {
+      return (
+        <CheckBox
+          checked={row.getIsSelected()}
+          disabled={!row.getCanSelect()}
+          indeterminate={row.getIsSomeSelected()}
+          onChange={row.getToggleSelectedHandler()}
+        />
+      );
+    },
+  },
   {
     accessorKey: "index",
     header: "Id",
@@ -29,7 +53,7 @@ export const Columns = [
       return (
         <div className="w-44 cursor-pointer">
           <Link
-            to={`/user/${_id}`}
+            // to={`/user/${_id}`}
             className="text-sm hover:underline font-semibold"
           >
             {value}
@@ -65,6 +89,19 @@ export const Columns = [
       const navigate = useNavigate();
       const { _id } = info.row.original;
 
+      const onDelete = async () => {
+        toast.promise(
+          dispatch(deleteUser(_id)).then((res) => {
+            const data = res?.payload;
+            if (res.error?.message === "Rejected") {
+              throw new Error(data);
+            }
+            return data;
+          }),
+          userToastDelete
+        );
+      };
+
       return (
         <div className="flex items-center justify-end">
           <Menu>
@@ -77,16 +114,7 @@ export const Columns = [
               <FaEdit />
               Edit
             </li>
-            <li
-              className="hover:bg-red-600"
-              onClick={() => {
-                toast.promise(dispatch(deleteUser(_id)), {
-                  pending: "Promise is pending",
-                  success: "Promise resolved 👌",
-                  error: "Promise rejected 🤯",
-                });
-              }}
-            >
+            <li className="hover:bg-red-600" onClick={onDelete}>
               <FaTrash />
               Delete
             </li>

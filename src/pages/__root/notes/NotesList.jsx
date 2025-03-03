@@ -2,17 +2,25 @@ import React, { useEffect } from "react";
 import { Columns } from "./Column";
 import { useDispatch, useSelector } from "react-redux";
 import { getNotes } from "../../../redux/fetures/noteSlice";
-import { Button, Table } from "../../../components";
+import { Button, Error, Table } from "../../../components";
 import { useNavigate } from "react-router";
 
 const NotesList = () => {
   const { notes, loading } = useSelector((state) => state.notes);
+  const { error } = useSelector((state) => state.auth);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getNotes());
   }, [dispatch]);
+
+  if (error) {
+    return (
+      <Error message={`UnAuthorized Access or Server not respond : ${error}`} />
+    );
+  }
 
   return (
     <div className="flex flex-col gap-4 items-start">

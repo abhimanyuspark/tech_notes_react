@@ -65,7 +65,7 @@ const Table = ({
   useEffect(() => {
     let push = [];
     table.getSelectedRowModel().flatRows.map((d) => {
-      let obj = d.original.id;
+      let obj = d.original._id;
       push.push(obj);
     });
     onSelectedRowIdsChange(push);

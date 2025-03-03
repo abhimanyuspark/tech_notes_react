@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button, CheckBox, Input, Loader } from "../../components";
 import { loginAuth } from "../../redux/fetures/authSlice";
 import { useLocalStorage } from "../../hooks";
+import { loginToast } from "../../config/toastParams";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -41,15 +42,10 @@ const Login = () => {
     event.preventDefault();
     const validate = validation(formData);
     const isValid = Object.values(validate).length === 0;
-    const obj = {
-      pending: "Promise is pending",
-      success: "Promise resolved 👌",
-      error: "Promise rejected 🤯",
-    };
 
     if (isValid) {
       try {
-        await toast.promise(dispatch(loginAuth(formData)), obj);
+        await toast.promise(dispatch(loginAuth(formData)), loginToast);
         navigate("/dash", { replace: true });
         setFormData({ ...formData, username: "", password: "" });
       } catch (error) {

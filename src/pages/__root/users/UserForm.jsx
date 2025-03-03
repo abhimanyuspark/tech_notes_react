@@ -17,10 +17,11 @@ import {
 import { rolesOptions } from "../../../config/rolesList";
 import { toast } from "react-toastify";
 import { randomPWD } from "../../../utils/randomPWD";
+import { userToastAdd, userToastUpdate } from "../../../config/toastParams";
 
 const status = [
-  { name: "Active", value: true },
-  { name: "In Active", value: false },
+  { name: "Active", value: true, kbd: "A" },
+  { name: "In Active", value: false, kbd: "I" },
 ];
 
 const UserForm = () => {
@@ -66,20 +67,15 @@ const UserForm = () => {
     }
 
     const isValid = Object.values(validate).length === 0;
-    const obj = {
-      pending: "Promise is pending",
-      success: "Promise resolved 👌",
-      error: "Promise rejected 🤯",
-    };
 
     if (isValid) {
       if (id) {
         await toast.promise(
           dispatch(updateUser({ ...formData, id: formData?._id })),
-          obj
+          userToastUpdate
         );
       } else {
-        await toast.promise(dispatch(postUser(formData)), obj);
+        await toast.promise(dispatch(postUser(formData)), userToastAdd);
       }
       navigate(-1, { replace: true });
     } else {
@@ -109,6 +105,7 @@ const UserForm = () => {
 
       <form onSubmit={onSubmit} className="flex flex-col gap-2">
         <Input
+          important
           label="Username"
           name="username"
           value={formData.username}
@@ -117,6 +114,7 @@ const UserForm = () => {
         />
 
         <Input
+          important={id ? false : true}
           random
           label="Password"
           name="password"
@@ -136,6 +134,7 @@ const UserForm = () => {
         />
 
         <InputSelect
+          important={id ? false : true}
           value={formData.roles}
           name={"roles"}
           label={"Roles"}
@@ -169,6 +168,7 @@ const UserForm = () => {
             {status.map((a, i) => (
               <option key={i} value={a.value}>
                 {a.name}
+                <kbd className="text-xs">⌘ {a.kbd}</kbd>
               </option>
             ))}
           </InputSelect>

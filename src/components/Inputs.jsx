@@ -143,4 +143,24 @@ const InputSelect = ({
   );
 };
 
-export { CheckBox, InputSelect, Input };
+const TextArea = ({ name, value, onChange, label, error, important }) => {
+  return (
+    <div className="flex gap-2 flex-col">
+      {label && <Label label={label} name={name} important={important} />}
+      <textarea
+        id={name}
+        name={name}
+        value={value}
+        onChange={onChange}
+        className={`block w-full rounded-md px-3 py-1.5 text-base outline-1 -outline-offset-1 placeholder:text-white focus:outline-2 focus:-outline-offset-2 sm:text-sm/6 h-20 ${
+          error
+            ? "outline-red-500 focus:outline-red-600"
+            : "outline-gray-300 focus:outline-indigo-600"
+        }`}
+      ></textarea>
+      <p className="text-red-500 text-sm">{error}</p>
+    </div>
+  );
+};
+
+export { CheckBox, InputSelect, Input, TextArea };

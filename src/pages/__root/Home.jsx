@@ -1,7 +1,10 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router";
 
 const Home = () => {
+  const { token } = useSelector((state) => state.auth);
+
   return (
     <section className="flex gap-2 flex-col">
       <header className="p-2 w-full flex items-center border-b border-white">
@@ -30,9 +33,11 @@ const Home = () => {
       </main>
 
       <footer className="flex items-center p-2 border-t border-white">
-        <Link to="/login" className="text-md text-blue-500 font-semibold">
-          Employee Login
-        </Link>
+        {!token && (
+          <Link to="/login" className="text-md text-blue-500 font-semibold">
+            User Login
+          </Link>
+        )}
       </footer>
     </section>
   );

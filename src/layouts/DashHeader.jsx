@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { NavLink } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { logOutAuth } from "../redux/fetures/authSlice";
 import { LuLogOut } from "../assets/icons";
+import { useLocalStorage } from "../hooks";
 
 const DashHeader = () => {
   return (
@@ -29,15 +30,17 @@ const DashHeader = () => {
 const LogOut = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error, token } = useSelector((state) => state.auth);
+  const { loading, error } = useSelector((state) => state.auth);
+  const [_, setPersist] = useLocalStorage("persist", false);
 
   const onLogOut = async () => {
     await toast.promise(dispatch(logOutAuth()), {
-      pending: "Pending Logout",
-      success: "Success logout",
-      error: "error logout",
+      pending: "Logout...",
+      success: "Logout success",
+      error: "Logout failed",
     });
-    navigate("/", { replace: true });
+    setPersist(false);
+    navigate("/");
   };
 
   if (loading) {
@@ -48,14 +51,14 @@ const LogOut = () => {
     return <div>Error: {error}</div>;
   }
 
-  // useEffect(() => {
-  //   if (token === null) {
-  //     navigate("/", { replace: true });
-  //   }
-  // }, [token, navigate]);
-
   return (
-    <button onClick={onLogOut} className="text-xl cursor-pointer">
+    <button
+      onClick={onLogOut}
+      className="text-xl cursor-pointer"
+      data-tooltip-id="my-tooltip"
+      data-tooltip-content="Logout"
+      data-tooltip-variant="info"
+    >
       <LuLogOut />
     </button>
   );

@@ -25,7 +25,7 @@ api.interceptors.response.use(
       try {
         // Call refresh API using Redux action
         const res = await store.dispatch(refreshAuth()).unwrap();
-
+        console.log("[axios-server] Refresh token successfull.");
         // Update token in Redux state
         const newToken = res.accessToken;
 

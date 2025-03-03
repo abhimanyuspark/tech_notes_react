@@ -1,6 +1,6 @@
 import Loader from "./Loader";
 import Error from "./Error";
-import { InputSelect, CheckBox, Input } from "./Inputs";
+import { InputSelect, CheckBox, Input, TextArea } from "./Inputs";
 import Table from "./table/Table";
 import { Button, CancelButton } from "./Buttons";
 import Menu from "./Menu";
@@ -17,4 +17,5 @@ export {
   CancelButton,
   Menu,
   Persist,
+  TextArea,
 };

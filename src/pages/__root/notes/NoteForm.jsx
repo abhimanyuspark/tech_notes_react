@@ -5,6 +5,7 @@ import {
   InputSelect,
   Loader,
   CancelButton,
+  TextArea,
 } from "../../../components";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -15,6 +16,7 @@ import {
 import { useNavigate, useParams } from "react-router";
 import { validation } from "../../../utils/validation";
 import { toast } from "react-toastify";
+import { noteToastAdd, noteToastUpdate } from "../../../config/toastParams";
 
 const status = [
   { name: "Completed", value: true },
@@ -56,19 +58,15 @@ const NoteForm = () => {
     event.preventDefault();
     const validate = validation(formData);
     const isValid = Object.values(validate).length === 0;
-    const obj = {
-      pending: "Promise is pending",
-      success: "Promise resolved 👌",
-      error: "Promise rejected 🤯",
-    };
+
     if (isValid) {
       if (id) {
         await toast.promise(
           dispatch(updateNote({ ...formData, id: formData?._id })),
-          obj
+          noteToastUpdate
         );
       } else {
-        await toast.promise(dispatch(postNote(formData)), obj);
+        await toast.promise(dispatch(postNote(formData)), noteToastAdd);
       }
       navigate(-1, { replace: true });
     } else {
@@ -98,13 +96,15 @@ const NoteForm = () => {
       <h2 className="text-2xl">{id ? "Update Note" : "New Note"}</h2>
       <form onSubmit={onSubmit} className="flex flex-col gap-2">
         <Input
+          important
           label="Title"
           name="title"
           value={formData.title}
           error={formError.title}
           onChange={onChange}
         />
-        <Input
+        <TextArea
+          important
           label="Text"
           name="text"
           value={formData.text}

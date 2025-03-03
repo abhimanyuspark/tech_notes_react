@@ -1,9 +1,9 @@
 import React from "react";
 
-const Error = ({ error, children }) => {
+const Error = ({ message, children }) => {
   return (
     <div className="flex items-center justify-center h-screen">
-      Error : {error}
+      Error : {message}
       <div>{children}</div>
     </div>
   );
