@@ -11,11 +11,12 @@ import {
   UsersList,
   Welcome,
 } from "./pages";
-import { Loader, Persist } from "./components";
+import { Loader, Persist, RequireAuth } from "./components";
 import Layout from "./layouts/Layout";
 import DashLayout from "./layouts/DashLayout";
 import { ToastContainer } from "react-toastify";
 import { Tooltip } from "react-tooltip";
+import { rolesOptions as roles } from "./config/rolesList";
 
 function App() {
   return (
@@ -29,23 +30,38 @@ function App() {
             <Route path="*" element={<NotFound />} />
 
             <Route element={<Persist />}>
-              {/* Dash start */}
-              <Route path="dash" element={<DashLayout />}>
-                <Route index element={<Welcome />} />
+              {/* Protected routes start */}
+              <Route
+                element={
+                  <RequireAuth allowedRoles={[...Object.values(roles)]} />
+                }
+              >
+                {/* Dash start */}
+                <Route path="dash" element={<DashLayout />}>
+                  <Route index element={<Welcome />} />
+                  <Route
+                    element={
+                      <RequireAuth
+                        allowedRoles={[roles.Admin, roles.Manager]}
+                      />
+                    }
+                  >
+                    <Route path="users">
+                      <Route index element={<UsersList />} />
+                      <Route path="new" element={<UserForm />} />
+                      <Route path="edit/:id" element={<UserForm />} />
+                    </Route>
+                  </Route>
 
-                <Route path="users">
-                  <Route index element={<UsersList />} />
-                  <Route path="new" element={<UserForm />} />
-                  <Route path="edit/:id" element={<UserForm />} />
+                  <Route path="notes">
+                    <Route index element={<NotesList />} />
+                    <Route path="new" element={<NoteForm />} />
+                    <Route path="edit/:id" element={<NoteForm />} />
+                  </Route>
                 </Route>
-
-                <Route path="notes">
-                  <Route index element={<NotesList />} />
-                  <Route path="new" element={<NoteForm />} />
-                  <Route path="edit/:id" element={<NoteForm />} />
-                </Route>
+                {/* Dash end */}
               </Route>
-              {/* Dash end */}
+              {/* Protected routes end */}
             </Route>
           </Route>
         </Routes>

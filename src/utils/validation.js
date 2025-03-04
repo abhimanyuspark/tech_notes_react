@@ -46,5 +46,11 @@ export const validation = (data) => {
     }
   }
 
+  if (data.hasOwnProperty("roles")) {
+    if (data.roles.length === 0) {
+      errors.roles = "Roles are required";
+    }
+  }
+
   return errors;
 };

@@ -1,6 +1,6 @@
 import axios from "axios";
-import { refreshAuth } from "../fetures/authSlice"; // Import refresh token action
-import { store } from "../store"; // Import Redux store
+import { refreshAuth, logOutAuth } from "../fetures/authSlice";
+import { store } from "../store";
 
 const url = import.meta.env.VITE_API_URL;
 
@@ -8,39 +8,33 @@ const api = axios.create({
   baseURL: url,
 });
 
-// Add an interceptor to refresh token if the request fails due to `401 Unauthorized`
-api.interceptors.response.use(
-  (response) => response, // If response is successful, return it
-  async (error) => {
-    const originalRequest = error.config;
+api.interceptors.request.use(
+  async (config) => {
+    const state = store.getState();
+    const token = state.auth.token;
 
-    if (
-      (error.response?.status === 401 &&
-        !originalRequest._retry &&
-        originalRequest.url === "/users") ||
-      originalRequest.url === "/notes"
-    ) {
-      originalRequest._retry = true;
-
-      try {
-        // Call refresh API using Redux action
-        const res = await store.dispatch(refreshAuth()).unwrap();
-        console.log("[axios-server] Refresh token successfull.");
-        // Update token in Redux state
-        const newToken = res.accessToken;
-
-        // Set new token in headers for future requests
-        api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
-
-        // Retry the original request with the new token
-        originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
-        return api(originalRequest);
-      } catch (refreshError) {
-        console.error("Refresh token failed:", refreshError);
-        return Promise.reject(refreshError);
-      }
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
 
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401 || error.response?.status === 403) {
+      const newToken = await store.dispatch(refreshAuth());
+
+      if (newToken) {
+        error.config.headers.Authorization = `Bearer ${newToken}`;
+        return axios(error.config); // Retry request with new token
+      } else {
+        store.dispatch(logOutAuth());
+      }
+    }
     return Promise.reject(error);
   }
 );

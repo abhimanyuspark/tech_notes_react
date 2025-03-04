@@ -6,9 +6,11 @@ import {
   Loader,
   CancelButton,
   TextArea,
+  Error,
 } from "../../../components";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  clearSelectedNote,
   getSelectedNote,
   postNote,
   updateNote,
@@ -25,14 +27,14 @@ const status = [
 
 const NoteForm = () => {
   const { id } = useParams();
-  const { loading } = useSelector((state) => state.notes);
+  const { loading, error } = useSelector((state) => state.notes);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     title: "",
     text: "",
-    user: "",
+    user: "67b064ce3e690585adc1f30c",
     completed: false,
   });
 
@@ -75,19 +77,23 @@ const NoteForm = () => {
   };
 
   useEffect(() => {
-    if (id !== undefined) {
-      const fetchData = async () => {
-        const res = await dispatch(getSelectedNote(id));
+    if (id) {
+      dispatch(getSelectedNote(id)).then((res) => {
         const data = res?.payload || {}; // Ensure it's always an object
         setFormData((prev) => ({
           ...prev,
           ...data,
         }));
-      };
-
-      fetchData();
+      });
     }
+    return () => {
+      dispatch(clearSelectedNote());
+    };
   }, [id, dispatch]);
+
+  if (error) {
+    return <Error message={error} />;
+  }
 
   return (
     <div className="flex flex-col gap-4">

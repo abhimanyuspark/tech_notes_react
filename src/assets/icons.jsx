@@ -13,7 +13,11 @@ import {
   FaRandom,
   FaEdit,
   FaTrash,
+  FaUsers,
+  FaUserPlus,
+  FaNotesMedical,
 } from "react-icons/fa";
+import { FaNoteSticky } from "react-icons/fa6";
 import { BsThreeDotsVertical } from "react-icons/bs";
 
 export {
@@ -32,4 +36,8 @@ export {
   FaLongArrowAltRight,
   BsThreeDotsVertical,
   LuLogOut,
+  FaUsers,
+  FaUserPlus,
+  FaNoteSticky,
+  FaNotesMedical,
 };

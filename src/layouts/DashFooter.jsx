@@ -1,13 +1,16 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router";
 import { TiHome } from "../assets/icons";
+import { useAuth } from "../hooks";
 
 const DashFooter = () => {
+  const { username, status } = useAuth();
+
   return (
     <footer className="p-2 border-t border-white flex gap-4 items-center">
       <HomeButton />
-      <p>Current User: </p>
-      <p>Status : </p>
+      <p>Current User: {username}</p>
+      <p>Status : {status}</p>
     </footer>
   );
 };

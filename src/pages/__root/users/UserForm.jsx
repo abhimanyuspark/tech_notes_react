@@ -10,6 +10,7 @@ import { validation } from "../../../utils/validation";
 import { useNavigate, useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  clearSelectedUser,
   getSelectedUser,
   postUser,
   updateUser,
@@ -20,8 +21,8 @@ import { randomPWD } from "../../../utils/randomPWD";
 import { userToastAdd, userToastUpdate } from "../../../config/toastParams";
 
 const status = [
-  { name: "Active", value: true, kbd: "A" },
-  { name: "In Active", value: false, kbd: "I" },
+  { name: "Active", value: true },
+  { name: "In Active", value: false },
 ];
 
 const UserForm = () => {
@@ -40,6 +41,7 @@ const UserForm = () => {
   const [formError, setFormError] = useState({
     username: "",
     password: "",
+    roles: [],
   });
 
   const [show, setShow] = useState(false);
@@ -70,31 +72,48 @@ const UserForm = () => {
 
     if (isValid) {
       if (id) {
-        await toast.promise(
-          dispatch(updateUser({ ...formData, id: formData?._id })),
+        toast.promise(
+          dispatch(updateUser({ ...formData, id: formData?._id })).then(
+            (res) => {
+              const data = res?.payload;
+              if (res?.error?.message === "Rejected") {
+                throw new Error(data);
+              }
+              navigate(-1, { replace: true });
+            }
+          ),
           userToastUpdate
         );
       } else {
-        await toast.promise(dispatch(postUser(formData)), userToastAdd);
+        toast.promise(
+          dispatch(postUser(formData)).then((res) => {
+            const data = res?.payload;
+            if (res?.error?.message === "Rejected") {
+              throw new Error(data);
+            }
+            navigate(-1, { replace: true });
+          }),
+          userToastAdd
+        );
       }
-      navigate(-1, { replace: true });
     } else {
       setFormError(validate);
     }
   };
 
   useEffect(() => {
-    if (id !== undefined) {
-      const fetchData = async () => {
-        const res = await dispatch(getSelectedUser(id));
+    if (id) {
+      dispatch(getSelectedUser(id)).then((res) => {
         const data = res?.payload || {}; // Ensure it's always an object
         setFormData((prev) => ({
           ...prev,
           ...data,
         }));
-      };
-      fetchData();
+      });
     }
+    return () => {
+      dispatch(clearSelectedUser());
+    };
   }, [id, dispatch]);
 
   return (
@@ -134,12 +153,13 @@ const UserForm = () => {
         />
 
         <InputSelect
-          important={id ? false : true}
+          important
           value={formData.roles}
           name={"roles"}
           label={"Roles"}
           multiple
           size={3}
+          error={formError.roles}
           onChange={(event) => {
             const { value } = event.target;
             setFormData({
@@ -168,7 +188,6 @@ const UserForm = () => {
             {status.map((a, i) => (
               <option key={i} value={a.value}>
                 {a.name}
-                <kbd className="text-xs">⌘ {a.kbd}</kbd>
               </option>
             ))}
           </InputSelect>

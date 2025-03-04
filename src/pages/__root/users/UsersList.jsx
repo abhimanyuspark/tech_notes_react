@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Error, Table } from "../../../components";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  clearUsersList,
   deleteSelectedUsers,
   getUsers,
 } from "../../../redux/fetures/userSlice";
@@ -21,6 +22,9 @@ const UsersList = () => {
 
   useEffect(() => {
     dispatch(getUsers());
+    return () => {
+      dispatch(clearUsersList());
+    };
   }, [dispatch]);
 
   if (error) {

@@ -6,21 +6,22 @@ import { toast } from "react-toastify";
 import { logOutAuth } from "../redux/fetures/authSlice";
 import { LuLogOut } from "../assets/icons";
 import { useLocalStorage } from "../hooks";
+import Navigation from "./Navigation";
 
 const DashHeader = () => {
   return (
-    <header className="py-4 px-8 w-full flex items-center justify-between border-b border-white">
+    <header className="py-4 px-4 w-full flex items-center justify-between border-b border-white">
       <NavLink
         to="/dash"
         className={({ isActive }) =>
-          `${isActive ? `` : ``} text-3xl text-blue-600`
+          `${isActive ? `text-blue-400` : `text-white`} text-3xl`
         }
       >
         TechNotes
       </NavLink>
 
-      <nav>
-        {/* link here */}
+      <nav className="flex items-center gap-4">
+        <Navigation />
         <LogOut />
       </nav>
     </header>

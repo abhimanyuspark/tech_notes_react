@@ -4,12 +4,9 @@ import api from "../server/server";
 // Fetch all users
 export const getUsers = createAsyncThunk(
   "fetch/users",
-  async (_, { getState, rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
-      const token = getState().auth.token;
-      const res = await api.get(`/users`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.get(`/users`);
       return res.data;
     } catch (error) {
       return rejectWithValue(
@@ -22,12 +19,9 @@ export const getUsers = createAsyncThunk(
 // Fetch selected user by ID
 export const getSelectedUser = createAsyncThunk(
   "fetch/selectedUser",
-  async (id, { getState, rejectWithValue }) => {
+  async (id, { rejectWithValue }) => {
     try {
-      const token = getState().auth.token;
-      const res = await api.get(`/users/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.get(`/users/${id}`);
       return res.data;
     } catch (error) {
       return rejectWithValue(
@@ -40,12 +34,9 @@ export const getSelectedUser = createAsyncThunk(
 // Create a new user
 export const postUser = createAsyncThunk(
   "post/user",
-  async (data, { getState, rejectWithValue }) => {
+  async (data, { rejectWithValue }) => {
     try {
-      const token = getState().auth.token;
-      const res = await api.post(`/users`, data, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.post(`/users`, data);
       return res.data;
     } catch (error) {
       return rejectWithValue(
@@ -58,12 +49,9 @@ export const postUser = createAsyncThunk(
 // Delete a user
 export const deleteUser = createAsyncThunk(
   "delete/user",
-  async (id, { getState, rejectWithValue }) => {
+  async (id, { rejectWithValue }) => {
     try {
-      const token = getState().auth.token;
-      await api.delete(`/users/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await api.delete(`/users/${id}`);
       return id;
     } catch (error) {
       return rejectWithValue(
@@ -75,15 +63,10 @@ export const deleteUser = createAsyncThunk(
 
 export const deleteSelectedUsers = createAsyncThunk(
   "deleteSelectedOnes/user",
-  async (ids, { getState, rejectWithValue }) => {
+  async (ids, { rejectWithValue }) => {
     try {
-      const token = getState().auth.token;
       await api.delete("/users/delete_multiple", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        data: { ids }, // Important: DELETE requests in Axios need `data`
+        data: { ids },
       });
       return ids;
     } catch (error) {
@@ -97,12 +80,9 @@ export const deleteSelectedUsers = createAsyncThunk(
 // Update a user
 export const updateUser = createAsyncThunk(
   "update/user",
-  async (data, { getState, rejectWithValue }) => {
+  async (data, { rejectWithValue }) => {
     try {
-      const token = getState().auth.token;
-      const res = await api.put(`/users`, data, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.put(`/users`, data);
       return res.data;
     } catch (error) {
       return rejectWithValue(
@@ -122,7 +102,14 @@ const initialState = {
 const userSlice = createSlice({
   name: "users",
   initialState,
-  reducers: {},
+  reducers: {
+    clearSelectedUser: (state) => {
+      state.selectedUser = {};
+    },
+    clearUsersList: (state) => {
+      state.users = [];
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getUsers.pending, (state) => {
@@ -134,7 +121,12 @@ const userSlice = createSlice({
       })
       .addCase(getUsers.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+      })
+
+      .addCase(postUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       })
 
       .addCase(getSelectedUser.pending, (state) => {
@@ -146,7 +138,7 @@ const userSlice = createSlice({
       })
       .addCase(getSelectedUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
       })
 
       .addCase(deleteUser.fulfilled, (state, action) => {
@@ -170,5 +162,7 @@ const userSlice = createSlice({
       });
   },
 });
+
+export const { clearUsersList, clearSelectedUser } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -7,7 +7,11 @@ export const loginToast = {
 export const userToastAdd = {
   pending: "Please wait...",
   success: "User has been successfully created.",
-  error: "Error while creating user.",
+  error: {
+    render({ data }) {
+      return `${data}`;
+    },
+  },
 };
 
 export const userToastUpdate = {

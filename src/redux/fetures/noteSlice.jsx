@@ -4,12 +4,9 @@ import api from "../server/server";
 // Fetch all notes
 export const getNotes = createAsyncThunk(
   "fetch/notes",
-  async (_, { getState, rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
-      const token = getState().auth.token;
-      const res = await api.get(`/notes`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.get(`/notes`);
       return res.data;
     } catch (error) {
       return rejectWithValue(
@@ -22,12 +19,9 @@ export const getNotes = createAsyncThunk(
 // Fetch selected note by ID
 export const getSelectedNote = createAsyncThunk(
   "fetch/selectedNote",
-  async (id, { getState, rejectWithValue }) => {
+  async (id, { rejectWithValue }) => {
     try {
-      const token = getState().auth.token;
-      const res = await api.get(`/notes/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.get(`/notes/${id}`);
       return res.data;
     } catch (error) {
       return rejectWithValue(
@@ -40,12 +34,9 @@ export const getSelectedNote = createAsyncThunk(
 // Create a new note
 export const postNote = createAsyncThunk(
   "post/note",
-  async (data, { getState, rejectWithValue }) => {
+  async (data, { rejectWithValue }) => {
     try {
-      const token = getState().auth.token;
-      const res = await api.post(`/notes`, data, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.post(`/notes`, data);
       return res.data;
     } catch (error) {
       return rejectWithValue(
@@ -58,12 +49,9 @@ export const postNote = createAsyncThunk(
 // Delete a note
 export const deleteNote = createAsyncThunk(
   "delete/note",
-  async (id, { getState, rejectWithValue }) => {
+  async (id, { rejectWithValue }) => {
     try {
-      const token = getState().auth.token;
-      await api.delete(`/notes/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await api.delete(`/notes/${id}`);
       return id;
     } catch (error) {
       return rejectWithValue(
@@ -76,16 +64,29 @@ export const deleteNote = createAsyncThunk(
 // Update a note
 export const updateNote = createAsyncThunk(
   "update/note",
-  async (data, { getState, rejectWithValue }) => {
+  async (data, { rejectWithValue }) => {
     try {
-      const token = getState().auth.token;
-      const res = await api.put(`/notes`, data, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.put(`/notes`, data);
       return res.data;
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Failed to update note"
+      );
+    }
+  }
+);
+
+export const deleteSelectedNotes = createAsyncThunk(
+  "deleteSelectedOnes/note",
+  async (ids, { rejectWithValue }) => {
+    try {
+      await api.delete("/notes/delete_multiple", {
+        data: { ids },
+      });
+      return ids;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to delete user"
       );
     }
   }
@@ -101,7 +102,14 @@ const initialState = {
 const noteSlice = createSlice({
   name: "notes",
   initialState,
-  reducers: {},
+  reducers: {
+    clearSelectedNote: (state) => {
+      state.selectedNote = {};
+    },
+    clearNotesList: (state) => {
+      state.notes = [];
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getNotes.pending, (state) => {
@@ -113,7 +121,7 @@ const noteSlice = createSlice({
       })
       .addCase(getNotes.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
       })
 
       .addCase(getSelectedNote.pending, (state) => {
@@ -125,14 +133,28 @@ const noteSlice = createSlice({
       })
       .addCase(getSelectedNote.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
       })
 
       .addCase(deleteNote.fulfilled, (state, action) => {
         state.loading = false;
         state.notes = state.notes.filter((n) => n._id !== action.payload);
+      })
+
+      .addCase(deleteSelectedNotes.fulfilled, (state, action) => {
+        state.loading = false;
+        state.notes = state.notes.filter(
+          (n) => !action.payload.includes(n._id)
+        );
+      })
+
+      .addCase(deleteNote.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
+
+export const { clearSelectedNote, clearNotesList } = noteSlice.actions;
 
 export default noteSlice.reducer;
