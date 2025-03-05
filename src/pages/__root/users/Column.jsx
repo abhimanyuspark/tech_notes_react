@@ -5,6 +5,7 @@ import { FaEdit, FaTrash } from "../../../assets/icons";
 import { toast } from "react-toastify";
 import { deleteUser } from "../../../redux/fetures/userSlice";
 import { userToastDelete } from "../../../config/toastParams";
+import { useAuth } from "../../../hooks";
 
 export const Columns = [
   {
@@ -87,6 +88,7 @@ export const Columns = [
     cell: (info) => {
       const dispatch = useDispatch();
       const navigate = useNavigate();
+      const { isAdmin } = useAuth();
       const { _id } = info.row.original;
 
       const onDelete = async () => {
@@ -106,7 +108,7 @@ export const Columns = [
         <div className="flex items-center justify-end">
           <Menu>
             <li
-              className="hover:bg-green-600"
+              className="hover:bg-blue-900"
               onClick={() => {
                 navigate(`/dash/users/edit/${_id}`);
               }}
@@ -114,10 +116,12 @@ export const Columns = [
               <FaEdit />
               Edit
             </li>
-            <li className="hover:bg-red-600" onClick={onDelete}>
-              <FaTrash />
-              Delete
-            </li>
+            {isAdmin && (
+              <li className="hover:bg-red-600" onClick={onDelete}>
+                <FaTrash />
+                Delete
+              </li>
+            )}
           </Menu>
         </div>
       );

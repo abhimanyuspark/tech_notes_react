@@ -14,8 +14,8 @@ const Login = () => {
   const { loading } = useSelector((state) => state.auth);
 
   const [formData, setFormData] = useState({
-    username: "Abhimanyu3103",
-    password: "abhi3103",
+    username: "",
+    password: "",
   });
 
   const [formError, setFormError] = useState({
@@ -45,9 +45,17 @@ const Login = () => {
 
     if (isValid) {
       try {
-        await toast.promise(dispatch(loginAuth(formData)), loginToast);
-        navigate("/dash", { replace: true });
-        setFormData({ ...formData, username: "", password: "" });
+        await toast.promise(
+          dispatch(loginAuth(formData)).then((res) => {
+            const data = res?.payload;
+            if (res.error) {
+              throw new Error(data);
+            }
+            navigate("/dash", { replace: true });
+            setFormData({ ...formData, username: "", password: "" });
+          }),
+          loginToast
+        );
       } catch (error) {
         if (!error.status) {
           setFormError({ ...formError, username: "No server response" });

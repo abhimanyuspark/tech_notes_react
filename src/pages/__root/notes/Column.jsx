@@ -5,6 +5,8 @@ import { FaEdit, FaTrash } from "../../../assets/icons";
 import { deleteNote } from "../../../redux/fetures/noteSlice";
 import { toast } from "react-toastify";
 import { noteToastDelete } from "../../../config/toastParams";
+import { useAuth } from "../../../hooks";
+import avatar from "../../../assets/images/avatar.png";
 
 export const Columns = [
   {
@@ -51,25 +53,23 @@ export const Columns = [
       const value = info.getValue();
       const { _id } = info.row.original;
       return (
-        <div className="cursor-pointer">
-          <Link
-            // to={`/user/${_id}`}
-            className="text-sm hover:underline font-semibold"
-          >
-            {value}
-          </Link>
-        </div>
+        <Link
+          // to={`/user/${_id}`}
+          className="text-sm block hover:underline font-semibold truncate w-50"
+        >
+          {value}
+        </Link>
       );
     },
   },
-  // {
-  //   accessorKey: "text",
-  //   header: () => "Text",
-  //   cell: (info) => {
-  //     const value = info.getValue();
-  //     return <div className="text-sm">{value}</div>;
-  //   },
-  // },
+  {
+    accessorKey: "text",
+    header: () => "Text",
+    cell: (info) => {
+      const value = info.getValue();
+      return <div className="text-sm truncate w-30">{value}</div>;
+    },
+  },
   {
     accessorKey: "createdAt",
     header: () => "CreatedAt",
@@ -113,7 +113,14 @@ export const Columns = [
     header: () => "Owner",
     cell: (info) => {
       const value = info.getValue();
-      return <span>{value}</span>;
+      return (
+        <div className="flex items-center gap-2">
+          <div className="border-2 border-blue-400 rounded-full size-8 object-cover bg-white">
+            <img src={avatar} alt="avatar" className="w-full h-full" />
+          </div>
+          <span>{value}</span>
+        </div>
+      );
     },
     sortDescFirst: false,
   },
@@ -124,6 +131,7 @@ export const Columns = [
     cell: (info) => {
       const dispatch = useDispatch();
       const navigate = useNavigate();
+      const { isAdmin, isManager } = useAuth();
       const { _id } = info.row.original;
 
       const onDelete = async () => {
@@ -143,7 +151,7 @@ export const Columns = [
         <div className="flex items-center justify-end">
           <Menu>
             <li
-              className="hover:bg-green-600"
+              className="hover:bg-blue-900"
               onClick={() => {
                 navigate(`/dash/notes/edit/${_id}`);
               }}
@@ -151,10 +159,12 @@ export const Columns = [
               <FaEdit />
               Edit
             </li>
-            <li className="hover:bg-red-600" onClick={onDelete}>
-              <FaTrash />
-              Delete
-            </li>
+            {(isAdmin || isManager) && (
+              <li className="hover:bg-red-600" onClick={onDelete}>
+                <FaTrash />
+                Delete
+              </li>
+            )}
           </Menu>
         </div>
       );

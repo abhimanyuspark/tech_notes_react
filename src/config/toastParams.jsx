@@ -1,7 +1,11 @@
 export const loginToast = {
   pending: "Logging in... 🚀",
   success: "Logged in successfully 🎉",
-  error: "Error while logging in 😔",
+  error: {
+    render({ data }) {
+      return `${data}`;
+    },
+  },
 };
 
 export const userToastAdd = {
@@ -17,7 +21,11 @@ export const userToastAdd = {
 export const userToastUpdate = {
   pending: "Please wait...",
   success: "User has been successfully updated.",
-  error: "Error while updating user.",
+  error: {
+    render({ data }) {
+      return `${data}`;
+    },
+  },
 };
 
 export const userToastDelete = {
@@ -33,13 +41,21 @@ export const userToastDelete = {
 export const noteToastAdd = {
   pending: "Please wait...",
   success: "Note has been successfully created.",
-  error: "Error while creating note.",
+  error: {
+    render({ data }) {
+      return `${data}`;
+    },
+  },
 };
 
 export const noteToastUpdate = {
   pending: "Please wait...",
   success: "Note has been successfully updated.",
-  error: "Error while updating note.",
+  error: {
+    render({ data }) {
+      return `${data}`;
+    },
+  },
 };
 
 export const noteToastDelete = {
